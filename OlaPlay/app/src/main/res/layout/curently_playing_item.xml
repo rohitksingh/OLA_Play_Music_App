@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:background="@android:color/darker_gray"
+    >
+   <ImageView
+       android:id="@+id/currentlyPlayingImage"
+       android:layout_width="50dp"
+       android:layout_height="50dp"
+       android:layout_margin="5dp"
+       android:layout_alignParentLeft="true"
+       />
+
+    <Button
+        android:id="@+id/playNext"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="@drawable/next_big"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp"
+        />
+    <Button
+        android:id="@+id/playCurrentSong"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="@drawable/play_big"
+        android:layout_toLeftOf="@id/playNext"
+        android:layout_centerVertical="true"
+        android:layout_margin="5dp"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/currentlyPlayingImage"
+        android:orientation="vertical"
+        android:layout_toLeftOf="@id/playCurrentSong"
+        >
+        <TextView
+            android:id="@+id/currentlyPlayingSong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ladi Dadi,sdm,smd,smd,smd,ms,dm,sm,dms,md,sm,dm,s,md,smd,"
+            android:textStyle="bold"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:maxLines="1"
+            android:textColor="#ffffff"
+            />
+        <TextView
+            android:id="@+id/currentlyPlayingArtists"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ladi Dadi"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:maxLines="1"
+            android:textColor="#ffffff"
+            />
+    </LinearLayout>
+</RelativeLayout>

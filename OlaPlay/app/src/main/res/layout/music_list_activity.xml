@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/special"
+        android:layout_alignParentBottom="true"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+    <include layout="@layout/curently_playing_item"
+        android:id="@+id/currentSongItem"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/musicRecycletView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_above="@id/currentSongItem"
+        />
+</RelativeLayout>

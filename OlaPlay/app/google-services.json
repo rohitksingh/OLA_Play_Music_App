@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "826024495818",
+    "firebase_url": "https://olaplay-c5849.firebaseio.com",
+    "project_id": "olaplay-c5849",
+    "storage_bucket": "olaplay-c5849.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:826024495818:android:c7c7d7178e9ca5a7",
+        "android_client_info": {
+          "package_name": "rohksin.com.olaplay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "826024495818-ulmmm12531bmn7ae2lbpn5amnaa71tp2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "rohksin.com.olaplay",
+            "certificate_hash": "738bec4329915474ff58e5e170028dfdc6cea837"
+          }
+        },
+        {
+          "client_id": "826024495818-ff1v8q4mm9ni0tpg5li2gk1lvm5uk19d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAba21tgp5PAdN-nMZlLNFR3GwhVR5tZqo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "826024495818-ff1v8q4mm9ni0tpg5li2gk1lvm5uk19d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
