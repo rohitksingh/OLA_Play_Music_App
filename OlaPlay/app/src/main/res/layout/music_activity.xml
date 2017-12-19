@@ -2,8 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/darker_gray"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/darker_gray">
+
     <ImageView
         android:id="@+id/cover_image"
         android:layout_width="match_parent"

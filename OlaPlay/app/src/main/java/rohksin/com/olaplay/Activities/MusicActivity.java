@@ -114,6 +114,10 @@ public class MusicActivity extends AppCompatActivity{
 
     private void loadData(int index)
     {
+        if(index ==-1)
+        {
+            index =0;
+        }
         Music currentMusic = getCurrentMusic(index);
 
         Glide.with(MusicActivity.this)
