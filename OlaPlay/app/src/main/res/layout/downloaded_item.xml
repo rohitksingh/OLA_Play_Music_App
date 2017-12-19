@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="60dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:id="@+id/musicIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/headphones"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        />
     <ImageView
         android:id="@+id/deleteHistory"
         android:layout_width="wrap_content"
@@ -15,14 +25,13 @@
         android:id="@+id/history"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:text="HISTORY slkdslkdlksldklskldklskdlkslkdlskldklsdlslkdlskldkslkd"
         android:layout_marginLeft="16dp"
         android:textSize="15sp"
         android:maxLines="1"
         android:ellipsize="end"
-        android:layout_toRightOf="@id/deleteHistory"
+        android:layout_toRightOf="@id/musicIcon"
         />
     <View
         android:layout_width="match_parent"

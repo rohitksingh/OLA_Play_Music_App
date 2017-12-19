@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Button;
+
 import java.util.Arrays;
 
 import butterknife.BindView;
@@ -23,6 +26,9 @@ public class DownloadedActivity extends AppCompatActivity implements DownloadTem
     @BindView(R.id.downloadedView)
     RecyclerView downLoadedView;
 
+    @BindView(R.id.seeAllFiles)
+    Button seeAllFiles;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -30,11 +36,20 @@ public class DownloadedActivity extends AppCompatActivity implements DownloadTem
         setContentView(R.layout.downloaded_activity);
         ButterKnife.bind(this);
 
-        String[] files = AppUtility.getDowmLoadedFiles(DownloadedActivity.this);
+        getSupportActionBar().setTitle("Downloaded Files");
+
+        String[] files =  AppUtility.getMainExternalFolder().list();            //AppUtility.getDowmLoadedFiles(DownloadedActivity.this);
         LinearLayoutManager llm = new LinearLayoutManager(DownloadedActivity.this);
         downLoadedView.setLayoutManager(llm);
         DownloadAdapter adapter = new DownloadAdapter(DownloadedActivity.this, Arrays.asList(files));
         downLoadedView.setAdapter(adapter);
+
+        seeAllFiles.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppUtility.viewAllFilesInFileManger(DownloadedActivity.this);
+            }
+        });
 
     }
 

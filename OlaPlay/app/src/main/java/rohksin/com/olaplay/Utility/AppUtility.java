@@ -126,26 +126,17 @@ public class AppUtility {
 
     public static void shareDownloadedSong(Context context,String path)
     {
-        String filePath = context.getFilesDir().getPath();
 
 
-        File[] files = context.getFilesDir().listFiles();
+        File file = new File(getMainExternalFolder(),path);
 
-        File file = files[0];
+        Uri uri = Uri.parse(file.getPath());
+        Intent share = new Intent(Intent.ACTION_SEND);
+        share.setType("audio/mp3");
+        share.putExtra(Intent.EXTRA_STREAM, uri);
+        context.startActivity(Intent.createChooser(share, "Share Sound File"));
 
-        Log.d("FILE PATH",file.getTotalSpace()+"");
-
-        Log.d("FILE PATH",filePath+"/"+path);
-
-
-        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-        Uri screenshotUri = Uri.parse(path);
-        sharingIntent.setType("audio/*");
-        sharingIntent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
-       // context.startActivity(Intent.createChooser(sharingIntent, "Share image using"));
     }
-
-
 
 
 
@@ -158,8 +149,6 @@ public class AppUtility {
         }
         return file;
     }
-
-
 
 
 
@@ -222,6 +211,18 @@ public class AppUtility {
             if (connection != null)
                 connection.disconnect();
         }
+    }
+
+
+
+
+    public static void viewAllFilesInFileManger(Context context)
+    {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Uri uri = Uri.parse(getMainExternalFolder().getPath());
+        intent.setDataAndType(uri, "text/csv");
+        context.startActivity(Intent.createChooser(intent, "See Downloaded files"));
+
     }
 
 

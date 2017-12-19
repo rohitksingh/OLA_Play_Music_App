@@ -359,7 +359,7 @@ public class MusicTestActivity extends AppCompatActivity implements MusicService
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         Uri uri = Uri.parse(file.getPath());
         intent.setDataAndType(uri, "text/csv");
-        startActivity(Intent.createChooser(intent, "Open folder"));
+        startActivity(Intent.createChooser(intent, "See Downloaded files"));
         //startActivity(Intent.createChooser(sharingIntent, "Share image using"));
 
         Log.d("RREAD FILE ", files.length+" ");

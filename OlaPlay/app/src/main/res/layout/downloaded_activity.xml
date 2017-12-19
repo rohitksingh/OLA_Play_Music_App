@@ -6,4 +6,18 @@
         android:id="@+id/downloadedView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/seeAllFiles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="See All Files"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="6dp"
+        android:background="@drawable/custom_button"
+        android:textColor="@color/Ola_gray"
+        android:textStyle="bold"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        />
 </RelativeLayout>
