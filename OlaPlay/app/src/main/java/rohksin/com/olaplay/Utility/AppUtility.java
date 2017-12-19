@@ -27,6 +27,8 @@ public class AppUtility {
     public static final String DOWNLOAD_SERVICE_URL = "rohksin.com.olaplay.Utility.DOWNLOAD_SERVICE_FILE_NAME.";
     public static final String MUSIC_PLAYING = "rohksin.com.olaplay.Utility.MUSIC_PLAYING";
 
+    public static final String MUSIC_PROGRESS_UPDATE_BROADCASTRECEIVER ="rohksin.com.olaplay.Utility.MUSIC_PROGRESS_UPDATE_BROADCASTRECEIVER";
+
 
     public static Map<String,String> redirectLinks;
 

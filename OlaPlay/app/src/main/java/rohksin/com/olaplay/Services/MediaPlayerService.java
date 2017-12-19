@@ -13,7 +13,9 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import rohksin.com.olaplay.Callbacks.MusicServiceCallbacks;
 import rohksin.com.olaplay.POJO.Music;
+import rohksin.com.olaplay.Utility.AppUtility;
 
 /**
  * Created by Illuminati on 12/18/2017.
@@ -30,6 +32,8 @@ public class MediaPlayerService extends Service  implements MediaPlayer.OnPrepar
 
     private String TAG = "ROHIT";
     private final IBinder musicBind = new MusicBinder();
+
+    MusicServiceCallbacks listener;
 
 
     //***************************************************************************
@@ -57,10 +61,10 @@ public class MediaPlayerService extends Service  implements MediaPlayer.OnPrepar
     @Override
     public void onCreate(){
 
-
         super.onCreate();
         player = new MediaPlayer();
         initMusicPlayer();
+
 
     }
 
@@ -79,6 +83,24 @@ public class MediaPlayerService extends Service  implements MediaPlayer.OnPrepar
     //*********************************************************
     //       Public Methods to utilsed by other Components
     //**********************************************************
+
+
+
+    public int getCurrentPosition()
+    {
+        return player.getCurrentPosition();
+    }
+
+    public int getFullLength()
+    {
+        return player.getDuration();
+    }
+
+    public void playAt(int playAt)
+    {
+        player.seekTo(playAt);
+        player.start();
+    }
 
 
 
@@ -112,11 +134,16 @@ public class MediaPlayerService extends Service  implements MediaPlayer.OnPrepar
 
     }
 
-    public boolean isSongPlaying()
+    private boolean isSongPlaying()
     {
         return player.isPlaying();
     }
 
+
+    public boolean  isTrackPlaying()
+    {
+        return player.isPlaying();
+    }
 
 
 
@@ -133,10 +160,10 @@ public class MediaPlayerService extends Service  implements MediaPlayer.OnPrepar
         player.setWakeMode(getApplicationContext(),
                 PowerManager.PARTIAL_WAKE_LOCK);
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-
         player.setOnPreparedListener(this);
         player.setOnCompletionListener(this);
         player.setOnErrorListener(this);
+
 
     }
 
@@ -171,6 +198,8 @@ public class MediaPlayerService extends Service  implements MediaPlayer.OnPrepar
             player.pause();
             pauseAt=player.getCurrentPosition();
             Log.d(TAG,"Stopped at "+pauseAt);
+
+       // sendBroadcast(new Intent(AppUtility.MUSIC_PROGRESS_UPDATE_BROADCASTRECEIVER));
 
     }
 

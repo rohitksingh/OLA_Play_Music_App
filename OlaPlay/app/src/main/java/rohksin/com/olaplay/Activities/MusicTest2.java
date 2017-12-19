@@ -1,12 +1,9 @@
 package rohksin.com.olaplay.Activities;
 
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
@@ -16,17 +13,19 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rohksin.com.olaplay.Callbacks.MusicServiceCallbacks;
 import rohksin.com.olaplay.R;
 import rohksin.com.olaplay.Services.MediaPlayerService;
-import rohksin.com.olaplay.Utility.AppUtility;
 
 /**
  * Created by Illuminati on 12/18/2017.
  */
 
-public class MusicTestActivity extends AppCompatActivity implements MusicServiceCallbacks{
 
+/**
+ * Created by Illuminati on 12/18/2017.
+ */
+
+public class MusicTest2 extends AppCompatActivity {
 
     @BindView(R.id.play)
     Button play;
@@ -49,9 +48,8 @@ public class MusicTestActivity extends AppCompatActivity implements MusicService
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.music_text);
-        ButterKnife.bind(this);
 
-        registerReceiver(new MusicProgressUpdateReceiver(),new IntentFilter(AppUtility.MUSIC_PROGRESS_UPDATE_BROADCASTRECEIVER));
+        ButterKnife.bind(this);
 
         play.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,16 +57,6 @@ public class MusicTestActivity extends AppCompatActivity implements MusicService
 
                 musicSrv.processSong("https://s3-ap-southeast-1.amazonaws.com/he-public-data/Afreen%20Afreen%20(DjRaag.Net)2cc6f8b.mp3");
 
-                song.setText(musicSrv.getFullLength()+"");
-            }
-        });
-
-        pause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                musicSrv.playAt(musicSrv.getFullLength()-4000);
-                //startActivity(new Intent(MusicTestActivity.this,MusicTest2.class));
             }
         });
 
@@ -81,7 +69,9 @@ public class MusicTestActivity extends AppCompatActivity implements MusicService
             }
         });
 
+
     }
+
 
 
 
@@ -92,15 +82,7 @@ public class MusicTestActivity extends AppCompatActivity implements MusicService
             playIntent = new Intent(this, MediaPlayerService.class);
             bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
             startService(playIntent);
-//
-
         }
-    }
-
-
-    public void updateProgess()
-    {
-        song.setText("");
     }
 
 
@@ -130,36 +112,12 @@ public class MusicTestActivity extends AppCompatActivity implements MusicService
     };
 
 
-
     @Override
     protected void onDestroy() {
         stopService(playIntent);
         musicSrv=null;
         super.onDestroy();
     }
-
-
-
-    @Override
-    public void updateProgerss() {
-        song.setText(musicSrv.getCurrentPosition()+"");
-    }
-
-
-    class MusicProgressUpdateReceiver extends BroadcastReceiver{
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if(intent.getAction().equals(AppUtility.MUSIC_PROGRESS_UPDATE_BROADCASTRECEIVER))
-            {
-                updateProgerss();
-            }
-        }
-    }
-
-
-
-
 
 }
 

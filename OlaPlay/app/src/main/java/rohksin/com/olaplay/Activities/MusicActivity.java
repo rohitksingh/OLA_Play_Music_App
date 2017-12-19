@@ -1,12 +1,17 @@
 package rohksin.com.olaplay.Activities;
 
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.Fade;
 import android.transition.Slide;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import rohksin.com.olaplay.POJO.Music;
 import rohksin.com.olaplay.R;
+import rohksin.com.olaplay.Services.MediaPlayerService;
 import rohksin.com.olaplay.Utility.AppUtility;
 
 /**
@@ -52,6 +58,12 @@ public class MusicActivity extends AppCompatActivity{
     @BindView(R.id.playNext)
     Button next;
 
+
+    private MediaPlayerService musicSrv;
+    private Intent playIntent;
+    private boolean musicBound = false;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -71,9 +83,10 @@ public class MusicActivity extends AppCompatActivity{
         Intent intent = getIntent();
         musicList = (ArrayList<Music>)(intent.getSerializableExtra(AppUtility.MUSIC_LIST));
         currentIndex = (Integer)intent.getIntExtra(AppUtility.CURRENT_INDEX,0);
-        isMusicPlaying = (Boolean)intent.getBooleanExtra(AppUtility.MUSIC_PLAYING,false);
-
+        //isMusicPlaying = (Boolean)intent.getBooleanExtra(AppUtility.MUSIC_PLAYING,false);
+        Log.d("BUTTON Status","Current");
         setUpButton();
+
 
         prev.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +105,7 @@ public class MusicActivity extends AppCompatActivity{
         current.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setUpButton();
+                loadData(currentIndex);
             }
         });
 
@@ -110,6 +123,15 @@ public class MusicActivity extends AppCompatActivity{
 
         songName.setText(currentMusic.getSong());
         artists.setText(currentMusic.getArtists());
+
+        if(musicSrv!=null)
+        {
+            Log.d("SERVICE NOT NULL","True");
+            musicSrv.processSong(currentMusic.getUrl());
+        }
+
+        setUpButton();
+
     }
 
 
@@ -139,6 +161,7 @@ public class MusicActivity extends AppCompatActivity{
     //  SYSTEM CALLBACKS
     //*********************************************************************
 
+
     @Override
     public void onBackPressed()
     {
@@ -148,6 +171,49 @@ public class MusicActivity extends AppCompatActivity{
         finish();
         super.onBackPressed();
     }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (playIntent == null) {
+            playIntent = new Intent(this, MediaPlayerService.class);
+            bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
+            startService(playIntent);
+        }
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        stopService(playIntent);
+        musicSrv=null;
+        super.onDestroy();
+    }
+
+
+
+
+
+    private ServiceConnection musicConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            MediaPlayerService.MusicBinder binder = (MediaPlayerService.MusicBinder) service;
+            //get service
+            musicSrv = binder.getService();
+            //pass list
+            //musicSrv.setList(new ArrayList<Music>());
+            musicBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            musicBound = false;
+        }
+    };
+
+
 
     //*********************************************************************
     //  HELPER METHODS
@@ -166,24 +232,52 @@ public class MusicActivity extends AppCompatActivity{
         }
     }
 
+
+
+
     private void setUpButton()
     {
-        if(isMusicPlaying)
+
+        if(musicSrv==null)
         {
-            isMusicPlaying = false;
-            setPlayButtonBackground(pauseBackgound);
-        }
-        else
-        {
-            isMusicPlaying = true;
+            Log.d("BUTTON STATUS","NULL");
             setPlayButtonBackground(playBackground);
+
         }
+        else {
+
+            Log.d("BUTTON STATUS","NOT NULL");
+
+            if(musicSrv.isTrackPlaying())
+            {
+                Log.d("BUTTON STATUS","Track Playing");
+                setPlayButtonBackground(playBackground);
+            }
+            else {
+                Log.d("BUTTON STATUS","Track Not Playing");
+                setPlayButtonBackground(pauseBackgound);
+            }
+        }
+
+
     }
+
 
     private void setPlayButtonBackground(int drawableId)
     {
         current.setBackgroundResource(drawableId);
     }
+
+
+
+    public void stopService()
+    {
+        stopService(playIntent);
+        musicSrv=null;
+        System.exit(0);
+    }
+
+
 
 }
 

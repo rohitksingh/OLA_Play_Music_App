@@ -2,12 +2,15 @@ package rohksin.com.olaplay;
 
 import android.app.ActivityOptions;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.transition.Fade;
 import android.support.v7.app.AppCompatActivity;
@@ -60,6 +63,7 @@ import rohksin.com.olaplay.Activities.SearchActivity;
 import rohksin.com.olaplay.Adapters.MusicAdapter;
 import rohksin.com.olaplay.Callbacks.AdapterItemListener;
 import rohksin.com.olaplay.POJO.Music;
+import rohksin.com.olaplay.Services.MediaPlayerService;
 import rohksin.com.olaplay.Utility.AppUtility;
 
 public class MusicListActivity extends AppCompatActivity implements AdapterItemListener,GoogleApiClient.OnConnectionFailedListener {
@@ -70,7 +74,7 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
 
     private RequestQueue requestQueue;
 
-    private MusicTask musicTask;
+    //private MusicTask musicTask;
 
     private FirebaseAuth firebaseAuth;
     private FirebaseUser currentUser;
@@ -80,6 +84,12 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
     private int playButtonBackgroung = R.drawable.play_big;
     private int pauseButtonBackgroung = R.drawable.pause_big;
 
+
+   //  Music Service Related *****************************
+    private MediaPlayerService musicSrv;
+    private Intent playIntent;
+    private boolean musicBound = false;
+   //  *****************************************************
 
 
     @BindView(R.id.musicRecycletView)
@@ -165,17 +175,15 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
     @Override
     public void itemTouch(int index) {
 
+
         currentPalingIndex = index;
 
         if(index==-1)
         {
             currentPalingIndex =0;
+            updateButton();
         }
-        else
-        {
-            setCurrentButtonBackground(pauseButtonBackgroung);
-            isSongPlaying = true;
-        }
+
 
 
         final Music music = musicList.get(currentPalingIndex);
@@ -187,16 +195,21 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
                 .centerCrop()
                 .into(currentSongImage);
 
-        if(index!=-1) {
-            if (musicTask != null) {
-                musicTask.cancel(true);
-            }
-            musicTask = new MusicTask(MusicListActivity.this);
-            musicTask.execute(music.getUrl());
+        if(index==-1)
+        {
+            currentPalingIndex =0;
+        }
+        else
+        {
+            isSongPlaying = true;
+            musicSrv.processSong(music.getUrl());
+            updateButton();
         }
 
 
+
     }
+
 
     @Override
     public void download(int index) {
@@ -248,6 +261,24 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
     //*********************************************************************
     //    SYSTEM CALLBACKS
     //*********************************************************************
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (playIntent == null) {
+            playIntent = new Intent(this, MediaPlayerService.class);
+            bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
+            startService(playIntent);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        stopService(playIntent);
+        musicSrv=null;
+        super.onDestroy();
+    }
+
 
     @Override
     public void onSaveInstanceState(Bundle bundle)
@@ -357,20 +388,19 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
     private void setUpCurrentPlaying()
     {
 
+       // Log.d("WHAT IS STATUS", musicSrv.isSongPlaying()+"");
+
+        updateButton();
+
         playCurrentSong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isSongPlaying)
-                {
-                    isSongPlaying= false;
-                    isSongPlaying= false;
-                    setCurrentButtonBackground(playButtonBackgroung);
-                }
-                else {
-                    isSongPlaying = true;
-                    setCurrentButtonBackground(pauseButtonBackgroung);
 
-                }
+                if(currentPalingIndex==-1)
+                    currentPalingIndex=0;
+                itemTouch(currentPalingIndex);
+                updateButton();
+
             }
         });
 
@@ -400,10 +430,7 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
     }
 
 
-    private void setCurrentButtonBackground(int id)
-    {
-        playCurrentSong.setBackgroundResource(id);
-    }
+
 
     // Double Tap to Exit
     @Override
@@ -504,5 +531,66 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
             getWindow().setExitTransition(fade);
         }
     }
+
+
+
+
+
+
+    //***************************************************************
+    // Music Service part
+    //***************************************************************
+
+
+    private ServiceConnection musicConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            MediaPlayerService.MusicBinder binder = (MediaPlayerService.MusicBinder) service;
+            //get service
+            musicSrv = binder.getService();
+            //pass list
+            //musicSrv.setList(new ArrayList<Music>());
+            musicBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            musicBound = false;
+        }
+    };
+
+
+
+
+    public void updateButton()
+    {
+
+        if(musicSrv==null)
+        {
+            Log.d("BUTTON STATUS","NULL");
+            playCurrentSong.setBackgroundResource(playButtonBackgroung);
+
+        }
+        else {
+
+            Log.d("BUTTON STATUS","NOT NULL");
+
+            if(musicSrv.isTrackPlaying())
+            {
+                Log.d("BUTTON STATUS","Track Playing");
+                playCurrentSong.setBackgroundResource(pauseButtonBackgroung);
+            }
+            else {
+                Log.d("BUTTON STATUS","Track Not Playing");
+                playCurrentSong.setBackgroundResource(playButtonBackgroung);
+            }
+        }
+    }
+
+
+
+
+
 
 }
