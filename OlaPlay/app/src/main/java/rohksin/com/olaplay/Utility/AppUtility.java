@@ -17,7 +17,6 @@ import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import rohksin.com.olaplay.Services.DownloadService;
 import rohksin.com.olaplay.Services.DownloadToExtStrService;
 
 /**
@@ -37,29 +36,9 @@ public class AppUtility {
     public static final String DOWNLOAD_SERVICE_URL = "rohksin.com.olaplay.Utility.DOWNLOAD_SERVICE_FILE_NAME.";
     public static final String MUSIC_PLAYING = "rohksin.com.olaplay.Utility.MUSIC_PLAYING";
 
-    public static final String MUSIC_PROGRESS_UPDATE_BROADCASTRECEIVER ="rohksin.com.olaplay.Utility.MUSIC_PROGRESS_UPDATE_BROADCASTRECEIVER";
-
-
     public static final String OLA_PLAY_MAIN_FOLDER_NAME="Ola Play";
 
-
-
     public static Map<String,String> redirectLinks;
-
-
-    public static void downLoadSong(Context context, String url, String fileName)
-    {
-        Intent intent  = new Intent(context, DownloadService.class);
-        String redirectink = getRediredLink(url);
-        if(redirectink!=null)
-        {
-            url = redirectink;
-        }
-        intent.putExtra(DOWNLOAD_SERVICE_URL, url);
-        intent.putExtra(DOWNLOAD_SERVICE_FILE_NAME, fileName+".mp3");
-        context.startService(intent);
-
-    }
 
 
     public static void downLoadSongToexternalStorage(Context context, String url, String fileName)
@@ -73,24 +52,6 @@ public class AppUtility {
         intent.putExtra(DOWNLOAD_SERVICE_URL, url);
         intent.putExtra(DOWNLOAD_SERVICE_FILE_NAME, fileName+".mp3");
         context.startService(intent);
-    }
-
-
-    //*********************************************************************
-    //  Returns all downloaded files
-    //*********************************************************************
-
-
-    public static String[] getDowmLoadedFiles(Context context)
-    {
-        return context.getFilesDir().list();
-    }
-
-
-    public static MediaPlayer getMediaPlayer(Context context, String url)
-    {
-        MediaPlayer player = MediaPlayer.create(context, Uri.parse(getRediredLink(url)));
-        return player;
     }
 
 
@@ -127,9 +88,7 @@ public class AppUtility {
     public static void shareDownloadedSong(Context context,String path)
     {
 
-
         File file = new File(getMainExternalFolder(),path);
-
         Uri uri = Uri.parse(file.getPath());
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setType("audio/mp3");
@@ -139,6 +98,9 @@ public class AppUtility {
     }
 
 
+    //****************************************************
+    //     Retuens Main Parent Folder
+    //***************************************************
 
     public static File getMainExternalFolder()
     {
@@ -149,7 +111,6 @@ public class AppUtility {
         }
         return file;
     }
-
 
 
     public static void downloadFile(String sUrl, String fileName)
@@ -166,7 +127,6 @@ public class AppUtility {
                 Log.d("Server returned HTTP",connection.getResponseCode()
                         + " " + connection.getResponseMessage());
             }
-
 
             int fileLength = connection.getContentLength();
 

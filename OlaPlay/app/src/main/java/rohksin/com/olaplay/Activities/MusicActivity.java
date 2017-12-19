@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
-import android.transition.Fade;
 import android.transition.Slide;
 import android.util.Log;
 import android.view.Gravity;
@@ -36,7 +35,6 @@ public class MusicActivity extends AppCompatActivity{
 
     private int currentIndex;
     private ArrayList<Music> musicList;
-    private boolean isMusicPlaying;
     private int playBackground = R.drawable.play_big;
     private int pauseBackgound = R.drawable.pause_big;
 
@@ -203,10 +201,7 @@ public class MusicActivity extends AppCompatActivity{
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             MediaPlayerService.MusicBinder binder = (MediaPlayerService.MusicBinder) service;
-            //get service
             musicSrv = binder.getService();
-            //pass list
-            //musicSrv.setList(new ArrayList<Music>());
             musicBound = true;
         }
 
@@ -243,35 +238,25 @@ public class MusicActivity extends AppCompatActivity{
 
         if(musicSrv==null)
         {
-            Log.d("BUTTON STATUS","NULL");
             setPlayButtonBackground(playBackground);
-
         }
         else {
 
-            Log.d("BUTTON STATUS","NOT NULL");
-
             if(musicSrv.isTrackPlaying())
             {
-                Log.d("BUTTON STATUS","Track Playing");
                 setPlayButtonBackground(playBackground);
             }
             else {
-                Log.d("BUTTON STATUS","Track Not Playing");
                 setPlayButtonBackground(pauseBackgound);
             }
         }
 
-
     }
-
 
     private void setPlayButtonBackground(int drawableId)
     {
         current.setBackgroundResource(drawableId);
     }
-
-
 
     public void stopService()
     {
@@ -281,9 +266,7 @@ public class MusicActivity extends AppCompatActivity{
     }
 
 
-
 }
-
 
 
 

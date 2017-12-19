@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import rohksin.com.olaplay.R;
 
@@ -16,11 +18,20 @@ import rohksin.com.olaplay.R;
 public class DevelperProfileActivity extends AppCompatActivity {
 
 
-    private CircleImageView linkedin;
-    private CircleImageView github;
-    private CircleImageView playstore;
-    private CircleImageView gmail;
-    private CircleImageView stackoverflow;
+    @BindView(R.id.linkedIn)
+    CircleImageView linkedin;
+
+    @BindView(R.id.github)
+    CircleImageView github;
+
+    @BindView(R.id.googlePlay)
+    CircleImageView playstore;
+
+    @BindView(R.id.gmail)
+    CircleImageView gmail;
+
+    @BindView(R.id.stackoerflow)
+    CircleImageView stackoverflow;
 
     private String linkedInLink="https://www.linkedin.com/in/rohit-singh-50a110105/";
     private String gitHubLink ="https://github.com/rohitksingh";
@@ -33,11 +44,8 @@ public class DevelperProfileActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dev_profile);
-        linkedin = (CircleImageView) findViewById(R.id.linkedIn);
-        github = (CircleImageView) findViewById(R.id.github);
-        playstore = (CircleImageView) findViewById(R.id.googlePlay);
-        gmail = (CircleImageView) findViewById(R.id.gmail);
-        stackoverflow = (CircleImageView) findViewById(R.id.stackoerflow);
+        ButterKnife.bind(this);
+
 
         stackoverflow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +82,6 @@ public class DevelperProfileActivity extends AppCompatActivity {
             }
         });
     }
-
 
     private void openLinkWithBrowser(String url){
 

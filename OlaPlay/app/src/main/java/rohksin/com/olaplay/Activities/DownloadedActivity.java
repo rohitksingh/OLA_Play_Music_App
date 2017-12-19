@@ -12,7 +12,6 @@ import java.util.Arrays;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rohksin.com.olaplay.Adapters.DownloadAdapter;
-import rohksin.com.olaplay.Adapters.HistoryAdapter;
 import rohksin.com.olaplay.Callbacks.DownloadTemListener;
 import rohksin.com.olaplay.R;
 import rohksin.com.olaplay.Utility.AppUtility;
@@ -38,7 +37,7 @@ public class DownloadedActivity extends AppCompatActivity implements DownloadTem
 
         getSupportActionBar().setTitle("Downloaded Files");
 
-        String[] files =  AppUtility.getMainExternalFolder().list();            //AppUtility.getDowmLoadedFiles(DownloadedActivity.this);
+        String[] files =  AppUtility.getMainExternalFolder().list();
         LinearLayoutManager llm = new LinearLayoutManager(DownloadedActivity.this);
         downLoadedView.setLayoutManager(llm);
         DownloadAdapter adapter = new DownloadAdapter(DownloadedActivity.this, Arrays.asList(files));

@@ -30,7 +30,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
     }
 
-
     @Override
     public HistoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -55,12 +54,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     {
 
         private TextView history;
-        private ImageView deleteItem;
 
         public HistoryViewHolder(View itemView) {
             super(itemView);
             history = (TextView)itemView.findViewById(R.id.history);
-            deleteItem = (ImageView)itemView.findViewById(R.id.deleteHistory);
         }
     }
 }

@@ -33,7 +33,7 @@ import rohksin.com.olaplay.Utility.AppUtility;
  * Created by Illuminati on 12/16/2017.
  */
 
-public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, AdapterItemListener, HistoryItemListener {
+public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, AdapterItemListener {
 
 
     private OlaPlayDatabaseHelper databaseHelper;
@@ -134,11 +134,9 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     @Override
     public boolean onQueryTextSubmit(String query) {
 
-        // This can be used for SQLite Database
-
         history = getHistory();
 
-        boolean alreadyExist = false;
+        boolean alreadyExist = false;               /// Prevents from adding duplicate values
 
         for(String data: history)
         {
@@ -157,6 +155,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
     }
 
+    // swiches between recent history and result from database  //
     @Override
     public boolean onQueryTextChange(String newText) {
 
@@ -183,6 +182,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
     }
 
+    // Callback method for downloading
     @Override
     public void download(int index) {
         Music music = musicList.get(index);
@@ -203,7 +203,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     //  HELPER METHODS
     //*********************************************************************
 
-
+    // Enables shared transition  //
     public void setAnimation()
     {
         Fade fade = new Fade();
@@ -214,12 +214,5 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         }
     }
 
-    @Override
-    public void deleteItemAt(int index) {
 
-        Log.d("Delete click","Yae");
-        databaseHelper.deleteHistory(history.get(index));
-        history.remove(index);
-        historyAdapter.notifyItemChanged(index);
-    }
 }

@@ -33,18 +33,15 @@ public class DownloadToExtStrService extends IntentService {
 
     public DownloadToExtStrService()
     {
-        super("DownloadService");
+        super("DownloadToExtStrService");
     }
-
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
 
         fileName = intent.getStringExtra(AppUtility.DOWNLOAD_SERVICE_FILE_NAME);
         downLoadUrl = intent.getStringExtra(AppUtility.DOWNLOAD_SERVICE_URL);
-
         startForeground(FOREGROUND_ID,getNotification());
-
         AppUtility.downloadFile(downLoadUrl,fileName);
         stopForeground(true);
     }
@@ -66,11 +63,5 @@ public class DownloadToExtStrService extends IntentService {
 
         return foregroundNotification.build();
     }
-
-
-
-
-
-
 
 }

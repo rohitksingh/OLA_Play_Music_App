@@ -25,13 +25,11 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.DownLo
     private List<String> list;
     private DownloadTemListener listener;
 
-
     public DownloadAdapter(Context context, List<String> list)
     {
         this.context = context;
         this.list = list;
         listener = (DownloadTemListener)context;
-
     }
 
 
@@ -54,7 +52,6 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.DownLo
             }
         });
 
-
     }
 
     @Override
@@ -64,7 +61,6 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.DownLo
 
     class DownLoadViewHolder extends RecyclerView.ViewHolder
     {
-
         private TextView downLoededFile;
         private ImageView shareSong;
 

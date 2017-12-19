@@ -240,7 +240,6 @@ public class MusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             viewHolder.userImage.setImageResource(R.drawable.user_placeholder);
             viewHolder.signOut.setVisibility(View.GONE);
             viewHolder.userName.setText("Not signed in");
-
         }
 
     }

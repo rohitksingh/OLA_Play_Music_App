@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
 import android.transition.Fade;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -58,7 +59,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rohksin.com.olaplay.Activities.MusicActivity;
-import rohksin.com.olaplay.AsyncTasks.MusicTask;
 import rohksin.com.olaplay.Activities.SearchActivity;
 import rohksin.com.olaplay.Adapters.MusicAdapter;
 import rohksin.com.olaplay.Callbacks.AdapterItemListener;
@@ -75,7 +75,6 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
 
     private RequestQueue requestQueue;
 
-    //private MusicTask musicTask;
 
     private FirebaseAuth firebaseAuth;
     private FirebaseUser currentUser;
@@ -113,12 +112,15 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
 
     private boolean doubleTapped = false;
 
+    private LocalBroadcastManager localBroadcastManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setAnimation();
         setContentView(R.layout.music_list_activity);
         ButterKnife.bind(this);
+        localBroadcastManager = LocalBroadcastManager.getInstance(MusicListActivity.this);
         registerReceiver();
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -174,13 +176,6 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
     //********************************************************************************
 
 
-    public void processMusic()
-    {
-
-    }
-
-
-
     @Override
     public void itemTouch(int index) {
 
@@ -191,18 +186,7 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
             currentPalingIndex =0;
         }
 
-
         setUpCurentPlayingSectionView(index);
-        /*
-        final Music music = musicList.get(currentPalingIndex);
-        currentSongName.setText(music.getSong());
-        currentlyPlayingArtist.setText(music.getArtists());
-
-        Glide.with(MusicListActivity.this)
-                .load(music.getCover_image())
-                .centerCrop()
-                .into(currentSongImage);
-         */
 
         final Music music = musicList.get(currentPalingIndex);
 
@@ -264,8 +248,6 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
                 String response = intent.getStringExtra(AppUtility.MUSIC_LIST);
                 musicList = parseWithMoshi(response);
                 setUpList();
-                //itemTouch(currentPalingIndex);
-
                 setUpCurentPlayingSectionView(currentPalingIndex);
 
             }
@@ -321,10 +303,8 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
 
             if(signInResult.isSuccess())
             {
-
                 GoogleSignInAccount googleSignInAccount = signInResult.getSignInAccount();
                 fireBaseAuthWithProviderAccount(googleSignInAccount);
-
             }
             else
             {
@@ -339,7 +319,6 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
     //      PRIVATE HELPER METHODS
     //*********************************************************************
 
-
     private void makeMusicRequest()
     {
         requestQueue = Volley.newRequestQueue(MusicListActivity.this);
@@ -351,7 +330,7 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
 
                         Intent intent = new Intent(AppUtility.MUSIC_LIST_RECEIVED);
                         intent.putExtra(AppUtility.MUSIC_LIST, response.toString());
-                        sendBroadcast(intent);
+                        localBroadcastManager.sendBroadcast(intent);
 
                     }
                 }, new Response.ErrorListener() {
@@ -392,7 +371,6 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
 
     private void setUpList()
     {
-        Log.d("ListSize",getMusicList().size()+"");
         musicAdapter = new MusicAdapter(MusicListActivity.this,getMusicList());
         musicRecyclerView.setAdapter(musicAdapter);
     }
@@ -416,10 +394,6 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
     private void setUpCurrentPlaying()
     {
 
-       // Log.d("WHAT IS STATUS", musicSrv.isSongPlaying()+"");
-
-       // updateButton();
-
         playCurrentSong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -427,7 +401,6 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
                 if(currentPalingIndex==-1)
                     currentPalingIndex=0;
                 itemTouch(currentPalingIndex);
-                //updateButton();
 
             }
         });
@@ -460,29 +433,21 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
 
     public void updateButton()
     {
-
         if(musicSrv==null)
         {
-            Log.d("PUTTON STATUS","NULL");
             playCurrentSong.setBackgroundResource(playButtonBackgroung);
-
         }
         else {
 
-            Log.d("PUTTON STATUS","NOT NULL");
-
             if(musicSrv.isTrackPlaying())
             {
-                Log.d("PUTTON STATUS","Track Playing");
                 playCurrentSong.setBackgroundResource(pauseButtonBackgroung);
             }
             else {
-                Log.d("PUTTON STATUS","Track Not Playing");
                 playCurrentSong.setBackgroundResource(playButtonBackgroung);
             }
         }
     }
-
 
 
     // Double Tap to Exit
@@ -587,9 +552,6 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
 
 
 
-
-
-
     //***************************************************************
     // Music Service part
     //***************************************************************
@@ -613,18 +575,14 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
         }
     };
 
-
-
-
-    //*****************************************************
-    // EXTRA
-    //****************************************************
-
+    //************************************************
+    // Receiver whih gets notifies when parsing finishes
+    //**************************************************
 
     private void registerReceiver()
     {
         IntentFilter filter = new IntentFilter(AppUtility.MUSIC_LIST_RECEIVED);
-        registerReceiver(new ResponseReceiver(),filter);
+        localBroadcastManager.registerReceiver(new ResponseReceiver(),filter);
         makeMusicRequest();
     }
 

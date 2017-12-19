@@ -11,12 +11,6 @@ import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import java.util.ArrayList;
-
-import rohksin.com.olaplay.Callbacks.MusicServiceCallbacks;
-import rohksin.com.olaplay.POJO.Music;
-import rohksin.com.olaplay.Utility.AppUtility;
-
 /**
  * Created by Illuminati on 12/18/2017.
  */
@@ -25,20 +19,11 @@ public class MediaPlayerService extends Service  implements MediaPlayer.OnPrepar
 
 
     private MediaPlayer player;
-
     private String currentSong ="noSong";
     private int  pauseAt;
     private boolean songPaused;
-
-    private String TAG = "ROHIT";
     private final IBinder musicBind = new MusicBinder();
-
-
     private boolean yoPlaying = false;
-
-
-
-    MusicServiceCallbacks listener;
 
 
     //***************************************************************************
@@ -49,18 +34,15 @@ public class MediaPlayerService extends Service  implements MediaPlayer.OnPrepar
     @Override
     public IBinder onBind(Intent intent) {
 
-        Log.d(TAG,"OnBind");
         return musicBind;
     }
 
     @Override
     public boolean onUnbind(Intent intent){
-        Log.d(TAG,"Unbid");
         player.stop();
         player.release();
         return false;
     }
-
 
 
     @Override
@@ -69,11 +51,7 @@ public class MediaPlayerService extends Service  implements MediaPlayer.OnPrepar
         super.onCreate();
         player = new MediaPlayer();
         initMusicPlayer();
-
-
     }
-
-
 
 
     public class MusicBinder extends Binder {
@@ -91,60 +69,25 @@ public class MediaPlayerService extends Service  implements MediaPlayer.OnPrepar
 
 
 
-    public int getCurrentPosition()
-    {
-        return player.getCurrentPosition();
-    }
-
-    public int getFullLength()
-    {
-        return player.getDuration();
-    }
-
-    public void playAt(int playAt)
-    {
-        player.seekTo(playAt);
-        player.start();
-    }
-
-
-
     public void processSong(String url)
     {
 
         if(!isSameSongRequest(url))
         {
-            Log.d("Rahul","not sameSongRequst");
             playSong(url);
         }
         else
         {
-            Log.d("Rahul",",Same Request");
             if(songPaused)
             {
-                Log.d("Rahul",",Song was paused");
                 resumeSong();
             }
             else
             {
-                Log.d("Rahul",",Song was running");
                 pauseSong();
-                //playSong(url);
             }
-
         }
 
-
-
-
-    }
-
-    private boolean isSongPlaying()
-    {
-        return yoPlaying;
-
-
-                //player.isPlaying();
     }
 
 
@@ -163,8 +106,6 @@ public class MediaPlayerService extends Service  implements MediaPlayer.OnPrepar
 
     private void initMusicPlayer(){
 
-        Log.d(TAG,"initMusicPlayer");
-
         player.setWakeMode(getApplicationContext(),
                 PowerManager.PARTIAL_WAKE_LOCK);
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -177,10 +118,7 @@ public class MediaPlayerService extends Service  implements MediaPlayer.OnPrepar
 
     private void playSong(String url){
 
-        Log.d(TAG,"PlaySong");
-
         yoPlaying = true;
-
         currentSong = url;
 
             Uri trackUri = Uri.parse(url);
@@ -191,7 +129,6 @@ public class MediaPlayerService extends Service  implements MediaPlayer.OnPrepar
             } catch (Exception e) {
                 Log.d("MUSIC SERVICE", "Error setting data source", e);
             }
-
             player.prepareAsync();
 
 
@@ -201,24 +138,16 @@ public class MediaPlayerService extends Service  implements MediaPlayer.OnPrepar
 
     private void pauseSong()
     {
-        Log.d(TAG,"Pause");
-
         yoPlaying = false;
 
             songPaused = true;
             player.pause();
             pauseAt=player.getCurrentPosition();
-            Log.d(TAG,"Stopped at "+pauseAt);
-
-       // sendBroadcast(new Intent(AppUtility.MUSIC_PROGRESS_UPDATE_BROADCASTRECEIVER));
-
     }
 
     private void resumeSong()
     {
-
         yoPlaying = true;
-
         songPaused = false;
         player.seekTo(pauseAt);
         player.start();
@@ -226,10 +155,8 @@ public class MediaPlayerService extends Service  implements MediaPlayer.OnPrepar
 
     private boolean isSameSongRequest(String url)
     {
-        Log.d("Current",url+" ??? "+currentSong);
         return url.equals(currentSong);
     }
-
 
 
     //****************************************************************
@@ -239,24 +166,19 @@ public class MediaPlayerService extends Service  implements MediaPlayer.OnPrepar
     @Override
     public void onCompletion(MediaPlayer mp) {
 
-        Log.d(TAG,"onCompletion Called");
+        Log.d("TAG","onCompletion Called");
     }
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
-        Log.d(TAG,"eror");
+        Log.d("TAG","eror");
         return false;
     }
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        Log.d(TAG,"onPrepared");
         mp.start();
     }
-
-
-
-
 
 
 }

@@ -1,7 +1,6 @@
 package rohksin.com.olaplay.Utility;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
@@ -9,7 +8,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import rohksin.com.olaplay.Activities.MusicTestActivity;
 
 /**
  * Created by Illuminati on 12/19/2017.
@@ -47,23 +45,17 @@ public class RuntimePermissionUtility {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
 
-            Toast.makeText(context, "Hey provide the permission",Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Permission is requred to download file",Toast.LENGTH_LONG).show();
             ActivityCompat.requestPermissions((AppCompatActivity) context,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-
 
         } else {
 
-            // No explanation needed, we can request the permission.
-
             ActivityCompat.requestPermissions((AppCompatActivity) context,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-
-
         }
     }
-
 
 }
