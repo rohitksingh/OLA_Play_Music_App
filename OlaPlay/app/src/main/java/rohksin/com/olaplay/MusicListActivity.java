@@ -65,6 +65,7 @@ import rohksin.com.olaplay.Callbacks.AdapterItemListener;
 import rohksin.com.olaplay.POJO.Music;
 import rohksin.com.olaplay.Services.MediaPlayerService;
 import rohksin.com.olaplay.Utility.AppUtility;
+import rohksin.com.olaplay.Utility.RuntimePermissionUtility;
 
 public class MusicListActivity extends AppCompatActivity implements AdapterItemListener,GoogleApiClient.OnConnectionFailedListener {
 
@@ -221,9 +222,13 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
 
     @Override
     public void download(int index) {
+
+        RuntimePermissionUtility.checkExternalStoragePermission(MusicListActivity.this);
+
         Music music = musicList.get(index);
         Toast.makeText(MusicListActivity.this,"Downloading "+music.getSong(),Toast.LENGTH_SHORT).show();
-        AppUtility.downLoadSong(this, music.getUrl(),music.getSong());
+        //AppUtility.downLoadSong(this, music.getUrl(),music.getSong());
+        AppUtility.downLoadSongToexternalStorage(this, music.getUrl(),music.getSong());
     }
 
     @Override
@@ -280,6 +285,8 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
             bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
             startService(playIntent);
         }
+
+        RuntimePermissionUtility.checkExternalStoragePermission(MusicListActivity.this);
     }
 
     @Override

@@ -4,13 +4,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import rohksin.com.olaplay.Services.DownloadService;
+import rohksin.com.olaplay.Services.DownloadToExtStrService;
 
 /**
  * Created by Illuminati on 12/15/2017.
@@ -32,6 +40,10 @@ public class AppUtility {
     public static final String MUSIC_PROGRESS_UPDATE_BROADCASTRECEIVER ="rohksin.com.olaplay.Utility.MUSIC_PROGRESS_UPDATE_BROADCASTRECEIVER";
 
 
+    public static final String OLA_PLAY_MAIN_FOLDER_NAME="Ola Play";
+
+
+
     public static Map<String,String> redirectLinks;
 
 
@@ -47,6 +59,20 @@ public class AppUtility {
         intent.putExtra(DOWNLOAD_SERVICE_FILE_NAME, fileName+".mp3");
         context.startService(intent);
 
+    }
+
+
+    public static void downLoadSongToexternalStorage(Context context, String url, String fileName)
+    {
+        Intent intent  = new Intent(context, DownloadToExtStrService.class);
+        String redirectink = getRediredLink(url);
+        if(redirectink!=null)
+        {
+            url = redirectink;
+        }
+        intent.putExtra(DOWNLOAD_SERVICE_URL, url);
+        intent.putExtra(DOWNLOAD_SERVICE_FILE_NAME, fileName+".mp3");
+        context.startService(intent);
     }
 
 
@@ -120,6 +146,83 @@ public class AppUtility {
     }
 
 
+
+
+
+    public static File getMainExternalFolder()
+    {
+        File file = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOWNLOADS), OLA_PLAY_MAIN_FOLDER_NAME);
+        if (!file.mkdirs()) {
+            Log.e("Directory not created", "Directory not created");
+        }
+        return file;
+    }
+
+
+
+
+
+    public static void downloadFile(String sUrl, String fileName)
+    {
+        InputStream input = null;
+        OutputStream output = null;
+        HttpURLConnection connection = null;
+        try {
+            URL url = new URL(sUrl);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.connect();
+
+            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                Log.d("Server returned HTTP",connection.getResponseCode()
+                        + " " + connection.getResponseMessage());
+            }
+
+
+            int fileLength = connection.getContentLength();
+
+            // download the file
+            input = connection.getInputStream();
+            File musicFile = new File(getMainExternalFolder(), fileName);
+            output = new FileOutputStream(musicFile);
+
+            byte data[] = new byte[4096];
+            long total = 0;
+            int count;
+
+            Log.d("TOTAL SIZE",sUrl);
+
+            while ((count = input.read(data)) != -1) {
+                // allow canceling with back button
+                /*
+                if (isCancelled()) {
+                    input.close();
+                    return null;
+                }
+                */
+                total += count;
+
+                Log.d("File size",total+"");
+                // publishing the progress....
+                //  if (fileLength > 0) // only if total length is known
+                // publishProgress((int) (total * 100 / fileLength));
+                output.write(data, 0, count);
+            }
+        } catch (Exception e) {
+            e.toString();
+        } finally {
+            try {
+                if (output != null)
+                    output.close();
+                if (input != null)
+                    input.close();
+            } catch (IOException ignored) {
+            }
+
+            if (connection != null)
+                connection.disconnect();
+        }
+    }
 
 
 }

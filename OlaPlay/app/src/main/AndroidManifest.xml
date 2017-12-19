@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="rohksin.com.olaplay">
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <application
         android:allowBackup="true"
         android:icon="@drawable/ola_play_logo"
@@ -55,6 +56,7 @@
 
         <service android:name=".Services.DownloadService"/>
         <service android:name=".Services.MediaPlayerService"/>
+        <service android:name=".Services.DownloadToExtStrService"/>
     </application>
 
 </manifest>

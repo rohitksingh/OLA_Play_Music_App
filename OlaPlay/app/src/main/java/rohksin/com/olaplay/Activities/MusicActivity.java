@@ -194,8 +194,6 @@ public class MusicActivity extends AppCompatActivity{
 
 
 
-
-
     private ServiceConnection musicConnection = new ServiceConnection() {
 
         @Override
