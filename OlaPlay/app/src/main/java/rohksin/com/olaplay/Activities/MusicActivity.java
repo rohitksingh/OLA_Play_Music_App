@@ -166,6 +166,7 @@ public class MusicActivity extends AppCompatActivity{
     public void onBackPressed()
     {
         Intent intent = new Intent();
+        Log.d("CURRENT_INDEXAT ",currentIndex+"");
         intent.putExtra(AppUtility.CURRENT_INDEX,currentIndex);
         setResult(Activity.RESULT_OK,intent);
         finish();

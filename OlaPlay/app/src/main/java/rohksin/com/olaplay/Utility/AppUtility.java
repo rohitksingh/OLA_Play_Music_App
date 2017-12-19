@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.util.Log;
 
+import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -92,6 +94,29 @@ public class AppUtility {
     public static String getRediredLink(String key)
     {
         return redirectLinks.get(key);
+    }
+
+
+
+    public static void shareDownloadedSong(Context context,String path)
+    {
+        String filePath = context.getFilesDir().getPath();
+
+
+        File[] files = context.getFilesDir().listFiles();
+
+        File file = files[0];
+
+        Log.d("FILE PATH",file.getTotalSpace()+"");
+
+        Log.d("FILE PATH",filePath+"/"+path);
+
+
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        Uri screenshotUri = Uri.parse(path);
+        sharingIntent.setType("audio/*");
+        sharingIntent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
+       // context.startActivity(Intent.createChooser(sharingIntent, "Share image using"));
     }
 
 

@@ -8,7 +8,9 @@ import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rohksin.com.olaplay.Adapters.DownloadAdapter;
 import rohksin.com.olaplay.Adapters.HistoryAdapter;
+import rohksin.com.olaplay.Callbacks.DownloadTemListener;
 import rohksin.com.olaplay.R;
 import rohksin.com.olaplay.Utility.AppUtility;
 
@@ -16,7 +18,7 @@ import rohksin.com.olaplay.Utility.AppUtility;
  * Created by Illuminati on 12/17/2017.
  */
 
-public class DownloadedActivity extends AppCompatActivity {
+public class DownloadedActivity extends AppCompatActivity implements DownloadTemListener {
 
     @BindView(R.id.downloadedView)
     RecyclerView downLoadedView;
@@ -31,8 +33,13 @@ public class DownloadedActivity extends AppCompatActivity {
         String[] files = AppUtility.getDowmLoadedFiles(DownloadedActivity.this);
         LinearLayoutManager llm = new LinearLayoutManager(DownloadedActivity.this);
         downLoadedView.setLayoutManager(llm);
-        HistoryAdapter adapter = new HistoryAdapter(DownloadedActivity.this, Arrays.asList(files));
+        DownloadAdapter adapter = new DownloadAdapter(DownloadedActivity.this, Arrays.asList(files));
         downLoadedView.setAdapter(adapter);
 
+    }
+
+    @Override
+    public void shareItem(String url) {
+        AppUtility.shareDownloadedSong(DownloadedActivity.this,url);
     }
 }

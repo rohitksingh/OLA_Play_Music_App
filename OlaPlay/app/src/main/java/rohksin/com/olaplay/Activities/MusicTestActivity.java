@@ -67,8 +67,9 @@ public class MusicTestActivity extends AppCompatActivity implements MusicService
             @Override
             public void onClick(View v) {
 
-                musicSrv.playAt(musicSrv.getFullLength()-4000);
-                //startActivity(new Intent(MusicTestActivity.this,MusicTest2.class));
+                //musicSrv.playAt(musicSrv.getFullLength()-4000);
+               // startActivity(new Intent(MusicTestActivity.this,MusicTest2.class));
+                startActivityForResult(new Intent(MusicTestActivity.this,MusicTest2.class),99);
             }
         });
 
@@ -81,6 +82,13 @@ public class MusicTestActivity extends AppCompatActivity implements MusicService
             }
         });
 
+    }
+
+
+    @Override
+    public void onActivityResult(int req, int res ,Intent data)
+    {
+        //super.onActivityResult(req);
     }
 
 

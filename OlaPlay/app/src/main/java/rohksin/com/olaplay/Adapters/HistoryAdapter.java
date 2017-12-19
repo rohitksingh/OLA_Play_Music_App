@@ -5,10 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
 
+import rohksin.com.olaplay.Callbacks.HistoryItemListener;
 import rohksin.com.olaplay.R;
 
 /**
@@ -20,10 +22,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     private Context context;
     private List<String> list;
 
+
     public HistoryAdapter(Context context, List<String> list)
     {
         this.context = context;
         this.list = list;
+
     }
 
 
@@ -35,10 +39,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     }
 
     @Override
-    public void onBindViewHolder(HistoryViewHolder holder, int position) {
+    public void onBindViewHolder(HistoryViewHolder holder, final int position) {
 
         String history = list.get(position);
         holder.history.setText(history);
+
     }
 
     @Override
@@ -50,10 +55,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     {
 
         private TextView history;
+        private ImageView deleteItem;
 
         public HistoryViewHolder(View itemView) {
             super(itemView);
             history = (TextView)itemView.findViewById(R.id.history);
+            deleteItem = (ImageView)itemView.findViewById(R.id.deleteHistory);
         }
     }
 }

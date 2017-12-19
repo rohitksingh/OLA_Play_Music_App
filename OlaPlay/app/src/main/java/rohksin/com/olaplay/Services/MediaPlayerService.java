@@ -33,6 +33,11 @@ public class MediaPlayerService extends Service  implements MediaPlayer.OnPrepar
     private String TAG = "ROHIT";
     private final IBinder musicBind = new MusicBinder();
 
+
+    private boolean yoPlaying = false;
+
+
+
     MusicServiceCallbacks listener;
 
 
@@ -136,13 +141,16 @@ public class MediaPlayerService extends Service  implements MediaPlayer.OnPrepar
 
     private boolean isSongPlaying()
     {
-        return player.isPlaying();
+        return yoPlaying;
+
+
+                //player.isPlaying();
     }
 
 
     public boolean  isTrackPlaying()
     {
-        return player.isPlaying();
+        return  yoPlaying;  //player.isPlaying();
     }
 
 
@@ -171,6 +179,7 @@ public class MediaPlayerService extends Service  implements MediaPlayer.OnPrepar
 
         Log.d(TAG,"PlaySong");
 
+        yoPlaying = true;
 
         currentSong = url;
 
@@ -194,6 +203,8 @@ public class MediaPlayerService extends Service  implements MediaPlayer.OnPrepar
     {
         Log.d(TAG,"Pause");
 
+        yoPlaying = false;
+
             songPaused = true;
             player.pause();
             pauseAt=player.getCurrentPosition();
@@ -205,6 +216,9 @@ public class MediaPlayerService extends Service  implements MediaPlayer.OnPrepar
 
     private void resumeSong()
     {
+
+        yoPlaying = true;
+
         songPaused = false;
         player.seekTo(pauseAt);
         player.start();

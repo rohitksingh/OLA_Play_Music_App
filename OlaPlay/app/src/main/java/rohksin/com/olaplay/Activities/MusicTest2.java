@@ -1,5 +1,6 @@
 package rohksin.com.olaplay.Activities;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -72,6 +73,14 @@ public class MusicTest2 extends AppCompatActivity {
 
     }
 
+
+    @Override
+    public void onBackPressed()
+    {
+        setResult(Activity.RESULT_OK,new Intent());
+        finish();
+        super.onBackPressed();
+    }
 
 
 

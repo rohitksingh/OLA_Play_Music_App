@@ -23,6 +23,7 @@ import butterknife.ButterKnife;
 import rohksin.com.olaplay.Adapters.HistoryAdapter;
 import rohksin.com.olaplay.Adapters.ResultAdapter;
 import rohksin.com.olaplay.Callbacks.AdapterItemListener;
+import rohksin.com.olaplay.Callbacks.HistoryItemListener;
 import rohksin.com.olaplay.Database.OlaPlayDatabaseHelper;
 import rohksin.com.olaplay.POJO.Music;
 import rohksin.com.olaplay.R;
@@ -32,10 +33,10 @@ import rohksin.com.olaplay.Utility.AppUtility;
  * Created by Illuminati on 12/16/2017.
  */
 
-public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, AdapterItemListener {
+public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, AdapterItemListener, HistoryItemListener {
 
 
-    private OlaPlayDatabaseHelper helper;
+    private OlaPlayDatabaseHelper databaseHelper;
 
     private HistoryAdapter historyAdapter;
     private ResultAdapter musicAdapter;
@@ -80,14 +81,14 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
     private void setUpSQLiteDatabase()
     {
-        helper = new OlaPlayDatabaseHelper(SearchActivity.this);
+        databaseHelper = new OlaPlayDatabaseHelper(SearchActivity.this);
         setUpHistoryList();
         history = getHistory();
     }
 
     private List<String> getHistory()
     {
-        return helper.getPeopleList();
+        return databaseHelper.getHistoryList();
     }
 
     private void setUpHistoryList()
@@ -150,7 +151,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         }
 
         if(!alreadyExist)
-        helper.addHistory(query);
+        databaseHelper.addHistory(query);
 
         return true;
 
@@ -211,5 +212,14 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
             getWindow().setEnterTransition(fade);
             getWindow().setExitTransition(fade);
         }
+    }
+
+    @Override
+    public void deleteItemAt(int index) {
+
+        Log.d("Delete click","Yae");
+        databaseHelper.deleteHistory(history.get(index));
+        history.remove(index);
+        historyAdapter.notifyItemChanged(index);
     }
 }

@@ -35,6 +35,7 @@ public class OlaPlayDatabaseHelper extends SQLiteOpenHelper {
     private final String DROP_TABLE = "drop table if exists "+ TABLE_NAME;
 
 
+
     public OlaPlayDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -67,8 +68,15 @@ public class OlaPlayDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void deleteHistory(String name)
+    {
+        String whereClause = HISTORY+"=?";
+        String[] whereArgs = new String[] { name };
+        db.delete(TABLE_NAME, whereClause, whereArgs);
+    }
 
-    public List<String> getPeopleList()
+
+    public List<String> getHistoryList()
     {
         db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_NAME,colums,null,null,null,null,null);

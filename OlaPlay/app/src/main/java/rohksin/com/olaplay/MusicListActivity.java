@@ -172,20 +172,27 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
     //    Notifies which item is selected to update the bottom current plaing song
     //********************************************************************************
 
+
+    public void processMusic()
+    {
+
+    }
+
+
+
     @Override
     public void itemTouch(int index) {
-
 
         currentPalingIndex = index;
 
         if(index==-1)
         {
             currentPalingIndex =0;
-            updateButton();
         }
 
 
-
+        setUpCurentPlayingSectionView(index);
+        /*
         final Music music = musicList.get(currentPalingIndex);
         currentSongName.setText(music.getSong());
         currentlyPlayingArtist.setText(music.getArtists());
@@ -194,6 +201,9 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
                 .load(music.getCover_image())
                 .centerCrop()
                 .into(currentSongImage);
+         */
+
+        final Music music = musicList.get(currentPalingIndex);
 
         if(index==-1)
         {
@@ -205,8 +215,6 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
             musicSrv.processSong(music.getUrl());
             updateButton();
         }
-
-
 
     }
 
@@ -251,7 +259,9 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
                 String response = intent.getStringExtra(AppUtility.MUSIC_LIST);
                 musicList = parseWithMoshi(response);
                 setUpList();
-                itemTouch(currentPalingIndex);
+                //itemTouch(currentPalingIndex);
+
+                setUpCurentPlayingSectionView(currentPalingIndex);
 
             }
         }
@@ -293,7 +303,8 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
         if(reqCode==AppUtility.MUSIC_ACTIVITY_REQ_CODE)
         {
             currentPalingIndex = data.getIntExtra(AppUtility.CURRENT_INDEX,0);
-            itemTouch(currentPalingIndex);
+            //itemTouch(currentPalingIndex);
+            setUpCurentPlayingSectionView(currentPalingIndex);
         }
 
         if(reqCode == GOOGLE_SIGN_IN_REQ_CODE)
@@ -321,12 +332,6 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
     //      PRIVATE HELPER METHODS
     //*********************************************************************
 
-    private void registerReceiver()
-    {
-        IntentFilter filter = new IntentFilter(AppUtility.MUSIC_LIST_RECEIVED);
-        registerReceiver(new ResponseReceiver(),filter);
-        makeMusicRequest();
-    }
 
     private void makeMusicRequest()
     {
@@ -385,12 +390,28 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
         musicRecyclerView.setAdapter(musicAdapter);
     }
 
+
+    public void setUpCurentPlayingSectionView(int index)
+    {
+        if(index==-1)
+            index =0;
+
+        final Music music = musicList.get(index);
+        currentSongName.setText(music.getSong());
+        currentlyPlayingArtist.setText(music.getArtists());
+
+        Glide.with(MusicListActivity.this)
+                .load(music.getCover_image())
+                .centerCrop()
+                .into(currentSongImage);
+    }
+
     private void setUpCurrentPlaying()
     {
 
        // Log.d("WHAT IS STATUS", musicSrv.isSongPlaying()+"");
 
-        updateButton();
+       // updateButton();
 
         playCurrentSong.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -399,7 +420,7 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
                 if(currentPalingIndex==-1)
                     currentPalingIndex=0;
                 itemTouch(currentPalingIndex);
-                updateButton();
+                //updateButton();
 
             }
         });
@@ -429,6 +450,31 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
         });
     }
 
+
+    public void updateButton()
+    {
+
+        if(musicSrv==null)
+        {
+            Log.d("PUTTON STATUS","NULL");
+            playCurrentSong.setBackgroundResource(playButtonBackgroung);
+
+        }
+        else {
+
+            Log.d("PUTTON STATUS","NOT NULL");
+
+            if(musicSrv.isTrackPlaying())
+            {
+                Log.d("PUTTON STATUS","Track Playing");
+                playCurrentSong.setBackgroundResource(pauseButtonBackgroung);
+            }
+            else {
+                Log.d("PUTTON STATUS","Track Not Playing");
+                playCurrentSong.setBackgroundResource(playButtonBackgroung);
+            }
+        }
+    }
 
 
 
@@ -563,34 +609,17 @@ public class MusicListActivity extends AppCompatActivity implements AdapterItemL
 
 
 
-    public void updateButton()
+    //*****************************************************
+    // EXTRA
+    //****************************************************
+
+
+    private void registerReceiver()
     {
-
-        if(musicSrv==null)
-        {
-            Log.d("BUTTON STATUS","NULL");
-            playCurrentSong.setBackgroundResource(playButtonBackgroung);
-
-        }
-        else {
-
-            Log.d("BUTTON STATUS","NOT NULL");
-
-            if(musicSrv.isTrackPlaying())
-            {
-                Log.d("BUTTON STATUS","Track Playing");
-                playCurrentSong.setBackgroundResource(pauseButtonBackgroung);
-            }
-            else {
-                Log.d("BUTTON STATUS","Track Not Playing");
-                playCurrentSong.setBackgroundResource(playButtonBackgroung);
-            }
-        }
+        IntentFilter filter = new IntentFilter(AppUtility.MUSIC_LIST_RECEIVED);
+        registerReceiver(new ResponseReceiver(),filter);
+        makeMusicRequest();
     }
-
-
-
-
 
 
 }
