@@ -186,7 +186,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     @Override
     public void download(int index) {
         Music music = musicList.get(index);
-        AppUtility.downLoadSong(SearchActivity.this,music.getUrl(),music.getSong());
+        AppUtility.downLoadSongToexternalStorage(SearchActivity.this,music.getUrl(),music.getSong());
     }
 
     @Override
