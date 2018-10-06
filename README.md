@@ -34,10 +34,10 @@ You can find following implementation in this project.
  # Features
 You can find following implementation in this project.
 
- - Play Pause Song (In foreground and in background)
- - Download Song
- - Google SignIn
- - Search 
+ - Play Pause Song   (Bound Service)
+ - Download Song     (Intent Service)
+ - Google SignIn     (Firebase Authentication)
+ - Search            (SearchView + SQLitedatabase)
  
  
  </br></br>
