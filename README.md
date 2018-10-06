@@ -32,12 +32,12 @@ You can find following implementation in this project.
  - SearchView
  
  # Features
-You can find following implementation in this project.
+You can find the following implementation in this project.
 
  - Play Pause Song   (Bound Service)
  - Download Song     (Intent Service)
  - Google SignIn     (Firebase Authentication)
- - Search            (SearchView + SQLitedatabase)
+ - Search            ([SearchView][1] + SQLitedatabase)
  
  
  </br></br>
@@ -51,3 +51,6 @@ You can find following implementation in this project.
   Rohit Singh
 </p>
 </a>
+
+
+  [1]: https://stackoverflow.com/questions/27378981/how-to-use-searchview-in-toolbar-android/49064027#49064027
