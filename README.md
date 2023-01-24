@@ -52,7 +52,6 @@ You can find the following implementation in this project.
 </p>
 </a>
 
-<img src="https://visitor-badge.feriirawann.repl.co?username=rohitksingh&repo=rohitksingh" alt="Visitor Badge" />
 
 
   [1]: https://stackoverflow.com/questions/27378981/how-to-use-searchview-in-toolbar-android/49064027#49064027
